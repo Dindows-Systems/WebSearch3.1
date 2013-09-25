@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!ELEMENT Site ANY>
+<!ATTLIST Site _Size CDATA "0">
+<!ELEMENT Page (In)>
+<!ATTLIST Page _Url ID #REQUIRED>
+<!ATTLIST Page _ID CDATA #REQUIRED>
+<!ATTLIST Page _Title CDATA "">
+<!ATTLIST Page _KW CDATA "">
+<!ATTLIST Page _ImgNum CDATA "0">
+<!ATTLIST Page _WordNum CDATA "0">
+<!ATTLIST Page _InDegree CDATA "0">
+<!ATTLIST Page _OutDegree CDATA "0">
+<!ATTLIST Page _ContentType CDATA "">
+<!ATTLIST Page _InSiteLnk CDATA "0">
+<!ATTLIST Page _Encoding CDATA "">
+<!ATTLIST Page _Type CDATA "0">
+<!ATTLIST Page _Rank CDATA "10">
+<!ATTLIST Page _Size CDATA "0">
+<!ELEMENT In ANY>
+<!ATTLIST In _Url CDATA #REQUIRED>

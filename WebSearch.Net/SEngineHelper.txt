@@ -1,0 +1,74 @@
+#region MSE Server Path
+
+        protected String _mseID;
+
+        public String MSEID
+        {
+            get { return _mseID; }
+        }
+
+        public static IList<SearchResult> GetSearchResult(string mseID, string query, int count)
+        {
+            // get the server path (using cache)
+            String svrPath;
+            if (HttpRuntime.Cache[mseID] == null)
+            {
+                XmlElement elem = XmlHelper.ReadNode(
+                    HttpContext.Current.Server.MapPath("App_Data/MSEServers.xml"), mseID);
+                HttpRuntime.Cache[mseID] = elem.Attributes["_Path"].Value;
+            }
+            svrPath = HttpRuntime.Cache[mseID].ToString();
+
+            // using 'get' to achieve the mse result in stream 
+            WebRequest wrGETURL = WebRequest.Create(String.Format(svrPath, query, count));
+            StreamReader objReader = new StreamReader(
+                wrGETURL.GetResponse().GetResponseStream(), 
+                Encoding.GetEncoding("GB2312"));
+
+            // parse the stream into xml
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(objReader);
+
+            // go through the xml, to convert the nodes into result objects
+            XmlNodeList resultList = xmlDoc.SelectNodes("/response/results/result");
+            IList<SearchEngineResult> queryResults = new List<SearchEngineResult>(count);
+            SearchEngineResult result = null;
+            for (int i = 0; i < resultList.Count; i++)
+            {
+                result = new SearchEngineResult();
+                XmlNode node = resultList.Item(i);
+                result.Url = node.ChildNodes[0].InnerText;          // for the first node: url
+                result.Title = node.ChildNodes[1].InnerText;        // for the second node: title
+                result.Description = node.ChildNodes[2].InnerText;  // for the third node: desc
+
+                // for search engines:
+                for (int j = 0; j < 4; j++)
+                {
+                    result.Add(node.ChildNodes[3 + j].Attributes["name"].Value,
+                        new SearchResultDetail(int.Parse(node.ChildNodes[3 + j].InnerText.Trim()),
+                        node.ChildNodes[3 + j].Attributes["snippet"].Value));
+                }
+                //foreach (XmlNode rank in node.ChildNodes[3].ChildNodes)
+                //    // for the fourth node: ranks for different search engines
+                //    result.Ranks.Add(rank.Attributes["name"].Value, rank.InnerText);
+
+                queryResults.Add(result);   // add this query result into result collection
+            }
+            return queryResults;
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public SEngineHelper()
+        {
+            _mseID = "APEX";
+        }
+ 
+        public SEngineHelper(String mseID)
+        {
+            _mseID = mseID;
+        }
+
+        #endregion

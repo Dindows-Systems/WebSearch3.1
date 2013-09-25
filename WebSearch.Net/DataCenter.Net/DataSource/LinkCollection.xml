@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT LinkCollection ANY>
+  <!ATTLIST LinkCollection _Name ID #REQUIRED>
+  <!ATTLIST LinkCollection _Path CDATA #REQUIRED>
+  <!ATTLIST LinkCollection _Target CDATA "">
+  <!ATTLIST LinkCollection _Store CDATA #REQUIRED>
+  <!ATTLIST LinkCollection _Language CDATA #REQUIRED>
+  <!ATTLIST LinkCollection _Size CDATA "0">
+  <!ELEMENT DataSource ANY>
+  <!ATTLIST DataSource _SubType CDATA #REQUIRED>
+  <!ATTLIST DataSource _SubName CDATA #REQUIRED>
+]>
+<root>
+</root>

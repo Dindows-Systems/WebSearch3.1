@@ -1,0 +1,119 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Text;
+
+namespace DataCenter.Net.MSSQL_DAL
+{
+    /// <summary>
+    /// Summary description for CQueryTextDAO
+    /// </summary>
+    public class MSSQLQueryTextDAO : MSSQLHelper, IQueryTextDAO
+    {
+        #region Properties
+
+        protected QueryLog _queryLog = null;
+
+        public QueryLog CurrentQueryLog
+        {
+            get { return _queryLog; }
+            set { _queryLog = value; }
+        }
+
+        #endregion
+
+        #region Constructors
+
+        public MSSQLQueryTextDAO() : base(DataSource.QueryLog)
+        {
+            this._queryLog = Config.CurrentQueryLog;
+        }
+
+        public MSSQLQueryTextDAO(QueryLog queryLog)
+        {
+            this._queryLog = queryLog;
+            this._conn = GetConnection(queryLog.Path);
+        }
+
+        #endregion
+
+        #region IQueryTextDAO Members
+
+        public List<string> GetTopQueryTexts(int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        public List<string> GetRandomQueryTexts(int count)
+        {
+            List<string> items = new List<string>(count);
+
+            // first, randomly decide where to start
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = this._conn;
+            do
+            {
+                int tempCount = (count - items.Count) * Config.AverageClickPerSession;
+                long start = Utility.Rand.Next(Config.TotalLogNum - tempCount);
+
+                cmd.CommandText = "SELECT TOP " + count.ToString() + " " + QueryLogFields.Query +
+                    " FROM (SELECT TOP " + tempCount.ToString() + " " + QueryLogFields.Query +
+                    " FROM [" + this._queryLog.Target + "] WHERE " + QueryLogFields.ID + ">=" +
+                    start.ToString() + " ) AS TABLE1 GROUP BY " + QueryLogFields.Query;
+
+                try
+                {
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                        items.Add(reader[QueryLogFields.Query].ToString());
+                    reader.Close();
+                }
+                catch (SqlException ex)
+                {
+                    this._conn.Close();
+                    throw ex;
+                }
+            } while (items.Count < count);
+
+            return items;
+        }
+
+        public List<string> GetCompleteQueryTexts(String prefix, int count)
+        {
+            List<string> items = new List<string>(count);
+
+            // get the query result table:
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("CompleteQueryTexts");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text, becasue some query result may have large result collection, so 
+            // we select top 1000 or so items of result and then do the group these this smaller collection
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * Config.AverageClickPerSession;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.Query + " FROM ");
+            str.Append("  (SELECT TOP " + tempSize.ToString());
+            str.Append(" " + QueryLogFields.Query);
+            str.Append("  FROM [" + this._queryLog.Target + "]");
+            str.Append("  WHERE CONTAINS(" + QueryLogFields.Query + ",'\"" + prefix + "*\"')");
+            str.Append("  AND " + QueryLogFields.Query + " LIKE '" + prefix + "%') AS TABLE1");
+            str.Append(" GROUP BY " + QueryLogFields.Query);
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "CompleteQueryTexts");
+
+            // add each result query text into the collection
+            foreach (DataRow row in logs.Tables[0].Rows)
+                items.Add(row[QueryLogFields.Query].ToString());
+            return items;
+        }
+
+        #endregion
+    }
+}

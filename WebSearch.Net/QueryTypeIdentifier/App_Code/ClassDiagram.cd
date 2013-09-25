@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="SimSun" Size="9" />
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.AutoCompleteEngines.IAutoCompleteEngine" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\AutoCompleteEngines\IAutoCompleteEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAABAAAAAAAAAgAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.AutoCompleteEngines.TopRankEngine" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\AutoCompleteEngines\TopRankEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.QueryTypeEngines.AVGnCEngine" Collapsed="true">
+    <Position X="3" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\QueryTypeEngines\AVGnC\AVGnCEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABCAAAAAAAAAAABACAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.QueryTypeEngines.CDEngine" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\QueryTypeEngines\CD\CDEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABCAAAAAAAAAAABACAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.QueryTypeEngines.DTreeEngine1" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\QueryTypeEngines\DTreeEngine1.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.QueryTypeEngines.IQueryTypeEngine" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\QueryTypeEngines\IQueryTypeEngine.cs</FileName>
+      <HashCode>IQAAAAAAAAAAAgAAAECAARAAAAAAAAIAAAAAKAAAEAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.QueryTypeEngines.NCSEngine" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\QueryTypeEngines\nCS\NCSEngine.cs</FileName>
+      <HashCode>AAAAAAAAQAAAAAAAAEAAABCAAAEAAAAAAABACAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.BLL.QueryTypeEngines.NRSEngine" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\BLL\QueryTypeEngines\nRS\NRSEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAABKAAAEAgAAAAABACAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.DAL.DALHelper" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\DAL\DALHelper.cs</FileName>
+      <HashCode>AAIAAAAAACAAAAEAAAAAAAAAAAAAAAEAAAAAEBAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.DAL.SQLServerDAL.CLogDAO" Collapsed="true">
+    <Position X="0.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\DAL\SQLServerDAL\CLogDAO.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAACAQAAAAAAAAAAAAgAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.DAL.SQLServerDAL.CLogGroupbyAnswerDAO" Collapsed="true">
+    <Position X="3" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\DAL\SQLServerDAL\CLogGroupbyAnswerDAO.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAACAQAAAAAAAAAAAAgAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.DAL.SQLServerDAL.CLogGroupbySessionDAO" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\DAL\SQLServerDAL\CLogGroupbySessionDAO.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAACAQAAAAAAAAAAAAgAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.DAL.SQLServerDAL.CLogQueryPrefixDAO" Collapsed="true">
+    <Position X="7.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\DAL\SQLServerDAL\CLogQueryPrefixDAO.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAACAQAAAAAAAAAAAAgAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.Global.Const" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\Global\Const.cs</FileName>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.Global.CurrentSetting" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\Global\CurrentSetting.cs</FileName>
+      <HashCode>CTAAgiAJgABAUBQAYgAAAAQAAIAAAAAEAAAIABAAABA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SJTU.CS.Apex.WebSearch.Model.QueryType" Collapsed="true">
+    <Position X="14" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\Model\QueryType.cs</FileName>
+      <HashCode>AAAAIAAAAAAggAAEAABhAAQAAAAAAAEAAAAAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryAutoCompleteSrv" Collapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\WS\QueryAutoCompleteSrv.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryPopularitySrv" Collapsed="true">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\WS\QueryPopularitySrv.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QueryTypeIdentificationSrv" Collapsed="true">
+    <Position X="15.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\WS\QueryTypeIdentificationSrv.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="SJTU.CS.Apex.WebSearch.DAL.ILogDAO" Collapsed="true">
+    <Position X="12.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\DAL\ILogDAO.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAACAQAAAAAAAAAAAAgAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="SJTU.CS.Apex.WebSearch.Global.QueryLogDB" Collapsed="true">
+    <Position X="15.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\Global\CurrentSetting.cs</FileName>
+      <HashCode>AQgAAAAgAAAAAAACAAIAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SJTU.CS.Apex.WebSearch.Global.FTS" Collapsed="true">
+    <Position X="12.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\Global\CurrentSetting.cs</FileName>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAQAAAAAAAACAAAAEACAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SJTU.CS.Apex.WebSearch.Global.LogTableType" Collapsed="true">
+    <Position X="14" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>App_Code\Global\CurrentSetting.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAIAAAAIAAAAAAAAAAAAABA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+</ClassDiagram>

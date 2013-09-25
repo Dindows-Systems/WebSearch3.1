@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT server ANY>
+  <!ATTLIST server _Name ID #REQUIRED>
+  <!ATTLIST server _Smtp CDATA #REQUIRED>
+  <!ATTLIST server _SmtpPort CDATA "25">
+  <!ATTLIST server _UseSSL CDATA "false">
+  <!ATTLIST server _Pop3 CDATA #REQUIRED>
+]>
+<root>
+  <server _Name="sina" _Smtp="smtp.sina.com" _SmtpPort="25" _UseSSL="false" _Pop3="pop.sina.com" />
+  <server _Name="gmail" _Smtp="smtp.google.com" _SmtpPort="465" _UseSSL="true" _Pop3="pop.google.com" />
+</root>

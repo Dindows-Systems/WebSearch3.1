@@ -1,0 +1,165 @@
+
+        #region IQueryLogDAO Members
+
+        public new long GetTotalItemsNum()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = this._conn;
+            cmd.CommandText = "SELECT COUNT(*) FROM [" + this._queryLog.Target + "]";
+            if (_userID == null)
+                cmd.CommandText += " GROUP BY " + QueryLogFields.User + "," + QueryLogFields.Query;
+            else if (_query == null)
+                cmd.CommandText += " WHERE " + QueryLogFields.User + "='" + _userID + "'";
+            else
+                cmd.CommandText += " WHERE " + QueryLogFields.User + "='" + _userID +
+                    "' AND " + QueryLogFields.Query + "='" + _query + "'";
+            try
+            {
+                return (long)cmd.ExecuteScalar();
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw ex;
+            }
+        }
+
+        public new DataTable Search(string query, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogsGroupbySession");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * 4;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.User + " AS " + QueryLogFields.User + ",");
+            str.Append(" " + QueryLogFields.Query + " AS " + QueryLogFields.Query + ",");
+            str.Append(" MAX(" + QueryLogFields.Rank + ") AS " + QueryLogFields.Rank + ",");
+            str.Append(" MAX(" + QueryLogFields.Order + ") AS " + QueryLogFields.Order);
+            str.Append(" FROM ");
+            str.Append("  (SELECT TOP " + tempSize.ToString());
+            str.Append("   " + QueryLogFields.User + "," + QueryLogFields.Rank + ",");
+            str.Append(QueryLogFields.Query + "," + QueryLogFields.Order);
+            str.Append("   FROM [" + this._queryLog.Target + "]");
+            str.Append("   WHERE CONTAINS(" + QueryLogFields.Query + ",'" +
+                MSSQLQueryFilter.Filter(query) + "')) AS TABLE1");
+            str.Append(" GROUP BY " + QueryLogFields.User + "," + QueryLogFields.Query);
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogsGroupbySession");
+            return logs.Tables[0];
+        }
+
+        public new DataTable RankedSearch(string query, int minRank, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogsGroupbySession");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text, becasue some query result may have large result collection, so 
+            // we select top 1000 or so items of result and then do the group these this smaller collection
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * Config.AverageClickPerSession;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.User + " AS " + QueryLogFields.User + ",");
+            str.Append(" " + QueryLogFields.Query + " AS " + QueryLogFields.Query + ",");
+            str.Append(" MAX(" + QueryLogFields.Rank + ") AS " + QueryLogFields.Rank + ",");
+            str.Append(" MAX(" + QueryLogFields.Order + ") AS " + QueryLogFields.Order);
+            str.Append(" FROM ");
+            str.Append("  (SELECT FT_TBL." + QueryLogFields.User + ",");
+            str.Append("   FT_TBL." + QueryLogFields.Query + ",");
+            str.Append("   FT_TBL." + QueryLogFields.Rank + ",");
+            str.Append("   FT_TBL." + QueryLogFields.Order + ",");
+            str.Append("   KEY_TBL.[RANK] AS matchRank");
+            str.Append("   FROM [" + this._queryLog.Target + "] AS FT_TBL");
+            str.Append("   INNER JOIN CONTAINSTABLE([" + this._queryLog.Target + "],");
+            str.Append(QueryLogFields.Query + "," + "'" + MSSQLQueryFilter.Filter(query) + "',");
+            str.Append(tempSize.ToString() + ") AS KEY_TBL");
+            str.Append("   ON FT_TBL." + QueryLogFields.ID + "=KEY_TBL.[KEY]");
+            str.Append("   WHERE KEY_TBL.RANK > " + minRank.ToString());
+            str.Append(") AS TABLE1");
+            str.Append(" GROUP BY " + QueryLogFields.User + "," + QueryLogFields.Query + ",matchRank");
+            str.Append(" ORDER BY matchRank DESC");
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogsGroupbySession");
+            return logs.Tables[0];
+        }
+
+        public new DataTable FreeTextSearch(string query, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogsGroupbySession");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * Config.AverageClickPerSession;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.User + " AS " + QueryLogFields.User + ",");
+            str.Append(" " + QueryLogFields.Query + " AS " + QueryLogFields.Query + ",");
+            str.Append(" MAX(" + QueryLogFields.Rank + ") AS " + QueryLogFields.Rank + ",");
+            str.Append(" MAX(" + QueryLogFields.Order + ") AS " + QueryLogFields.Order);
+            str.Append(" FROM ");
+            str.Append("  (SELECT TOP " + tempSize.ToString());
+            str.Append("   " + QueryLogFields.User + "," + QueryLogFields.Rank + ",");
+            str.Append(    QueryLogFields.Query + "," + QueryLogFields.Order);
+            str.Append("   FROM [" + this._queryLog.Target + "]");
+            str.Append("   WHERE FREETEXT(" + QueryLogFields.Query + ",'" + query + "')) AS TABLE1");
+            str.Append(" GROUP BY " + QueryLogFields.User + "," + QueryLogFields.Query);
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogsGroupbySession");
+            return logs.Tables[0];
+        }
+
+        public new DataTable RankedFreeTextSearch(string query, int minRank, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogsGroupbySession");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text, becasue some query result may have large result collection, so 
+            // we select top 1000 or so items of result and then do the group these this smaller collection
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * Config.AverageClickPerSession;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.User + " AS " + QueryLogFields.User + ",");
+            str.Append(" " + QueryLogFields.Query + " AS " + QueryLogFields.Query + ",");
+            str.Append(" MAX(" + QueryLogFields.Rank + ") AS " + QueryLogFields.Rank + ",");
+            str.Append(" MAX(" + QueryLogFields.Order + ") AS " + QueryLogFields.Order);
+            str.Append(" FROM ");
+            str.Append("  (SELECT FT_TBL." + QueryLogFields.User + ",");
+            str.Append("   FT_TBL." + QueryLogFields.Query + ",");
+            str.Append("   FT_TBL." + QueryLogFields.Rank + ",");
+            str.Append("   FT_TBL." + QueryLogFields.Order + ",");
+            str.Append("   KEY_TBL.[RANK] AS matchRank");
+            str.Append("   FROM [" + this._queryLog.Target + "] AS FT_TBL");
+            str.Append("   INNER JOIN FREETEXTTABLE([" + this._queryLog.Target + "],");
+            str.Append(    QueryLogFields.Query + "," + "'" + query + "',");
+            str.Append(    tempSize.ToString() + ") AS KEY_TBL");
+            str.Append("   ON FT_TBL." + QueryLogFields.ID + "=KEY_TBL.[KEY]");
+            str.Append("   WHERE KEY_TBL.RANK > " + minRank.ToString() + ") AS TABLE1");
+            str.Append(" GROUP BY " + QueryLogFields.User + "," + QueryLogFields.Query + ",matchRank");
+            str.Append(" ORDER BY matchRank DESC");
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogsGroupbySession");
+            return logs.Tables[0];
+        }
+
+        #endregion

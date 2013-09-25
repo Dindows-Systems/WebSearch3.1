@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <Setting>
+    <FullName>Average number of clicks per query</FullName>
+    <ShortName>AVGnC</ShortName>
+    <Cite>Automatic Identification of User Goals in Web Search</Cite>
+    <Valve>1</Valve>
+  </Setting>
+</root>

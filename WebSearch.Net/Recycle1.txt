@@ -1,0 +1,121 @@
+MSSQLQueryLog.cs:
+
+public long GetTotalItemsNum()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = this._conn;
+            cmd.CommandText = "SELECT COUNT(*) FROM [" + this._queryLog.Target + "]";
+            try
+            {
+                return (long)cmd.ExecuteScalar();
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw (ex);
+            }
+        }
+
+        public DataTable Search(string query, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogs");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            StringBuilder str = new StringBuilder();
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.User + "," + QueryLogFields.Query + ",");
+            str.Append(" " + QueryLogFields.Rank + "," + QueryLogFields.Order + " ");
+            str.Append("FROM [" + this._queryLog.Target + "] ");
+            str.Append("WHERE CONTAINS(" + QueryLogFields.Query + ",'" +
+                MSSQLQueryFilter.Filter(query) + "')");
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogs");
+            return logs.Tables[0];
+        }
+
+        public DataTable RankedSearch(string query, int minRank, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogs");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text, becasue some query result may have large result collection, so 
+            // we select top 1000 or so items of result and then do the group these this smaller collection
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * Config.AverageClickPerSession;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" FT_TBL." + QueryLogFields.User + ",");
+            str.Append(" FT_TBL." + QueryLogFields.Query + ",");
+            str.Append(" FT_TBL." + QueryLogFields.Rank + ",");
+            str.Append(" FT_TBL." + QueryLogFields.Order + " ");
+            str.Append("FROM [" + this._queryLog.Target + "] AS FT_TBL");
+            str.Append(" INNER JOIN CONTAINSTABLE([" + this._queryLog.Target + "],");
+            str.Append(QueryLogFields.Query + ",'" +
+                MSSQLQueryFilter.Filter(query) + "',");
+            str.Append(tempSize.ToString() + ") AS KEY_TBL");
+            str.Append(" ON FT_TBL." + QueryLogFields.ID + "=KEY_TBL.[KEY] ");
+            str.Append("WHERE KEY_TBL.RANK > " + minRank.ToString());
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogs");
+            return logs.Tables[0];
+        }
+
+        public DataTable FreeTextSearch(string query, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogs");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            StringBuilder str = new StringBuilder();
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" " + QueryLogFields.User + "," + QueryLogFields.Query + ",");
+            str.Append(" " + QueryLogFields.Rank + "," + QueryLogFields.Order + " ");
+            str.Append("FROM [" + this._queryLog.Target + "] ");
+            str.Append("WHERE FREETEXT(" + QueryLogFields.Query + ",'" + query + "')");
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogs");
+            return logs.Tables[0];
+        }
+
+        public DataTable RankedFreeTextSearch(string query, int minRank, int count)
+        {
+            // set the database connection of the adapter
+            DataSet logs = new DataSet("QueryLogs");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand();
+            adapter.SelectCommand.Connection = this._conn;
+
+            // build the select command text, becasue some query result may have large result collection, so 
+            // we select top 1000 or so items of result and then do the group these this smaller collection
+            StringBuilder str = new StringBuilder();
+            int tempSize = count * Config.AverageClickPerSession;
+            str.Append("SELECT TOP " + count.ToString());
+            str.Append(" FT_TBL." + QueryLogFields.User + ",");
+            str.Append(" FT_TBL." + QueryLogFields.Query + ",");
+            str.Append(" FT_TBL." + QueryLogFields.Rank + ",");
+            str.Append(" FT_TBL." + QueryLogFields.Order + " ");
+            str.Append("FROM [" + this._queryLog.Target + "] AS FT_TBL");
+            str.Append(" INNER JOIN FREETEXTTABLE([" + this._queryLog.Target + "],");
+            str.Append(QueryLogFields.Query + "," + "'" + query + "',");
+            str.Append(tempSize.ToString() + ") AS KEY_TBL");
+            str.Append(" ON FT_TBL." + QueryLogFields.ID + "=KEY_TBL.[KEY] ");
+            str.Append("WHERE KEY_TBL.RANK > " + minRank.ToString());
+            adapter.SelectCommand.CommandText = str.ToString();
+
+            // fill the data table
+            adapter.Fill(logs, "QueryLogs");
+            return logs.Tables[0];
+        }

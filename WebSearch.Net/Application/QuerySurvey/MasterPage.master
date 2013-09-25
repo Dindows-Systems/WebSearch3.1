@@ -1,0 +1,46 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" dir="ltr">
+<head runat="server">
+    <title>Query Survey</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="Microsoft.com" name="SearchTitle" />
+    <meta content="Microsoft.com Homepage" name="SearchDescription" />
+    <meta content="MSHTML 6.00.3790.2858" name="GENERATOR" />
+
+    <script type="text/javascript" src=".\App_Themes\library.js"></script>
+
+    <script type="text/javascript" src=".\App_Themes\SiteRecruit_PageConfiguration_Homepage_Page.js"></script>
+
+</head>
+<body>
+    <div id="page">
+        <div id="pageC">
+            <a style="position: absolute" name="top">&nbsp;</a>
+            <div class="header">
+                <span class="leftAlign"><a class="headerLink" onclick="try{SiteRecruit_optOut();}catch(e){}; return false"
+                    href="http://apex.sjtu.edu.cn/apex_wiki"></a></span><span class="rightAlign">&nbsp;&nbsp;&nbsp;P.R.China&nbsp;&nbsp;&nbsp;<a
+                        class="headerLink" href="Default.aspx">Home</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
+                            class="headerLink" href="http://apex.sjtu.edu.cn/apex_wiki">S.J.T.U Apex Lab Home</a></span></div>
+            <div id="masterNavScreen">
+                &nbsp;</div>
+            <form id="form1" runat="server">
+                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                </asp:ContentPlaceHolder>
+            </form>
+            <div class="footer">
+                <p>
+                    © 2007 S.J.T.U Apex Laboratory.</p>
+                <p>
+                    <a href="http://go.microsoft.com/?linkid=317027">Manage Your Profile</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
+                        href="http://apex.sjtu.edu.cn/apex_wiki/%E8%81%94%E7%B3%BB%E6%88%91%E4%BB%AC">Contact
+                        Us</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="Manual.aspx">Terms of Use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
+                            href="http://go.microsoft.com/?linkid=4412893">Trademarks</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
+                                href="http://go.microsoft.com/?linkid=4412894">Privacy Statement</a></p>
+            </div>
+            <noscript>
+                <img id="DCSIMG" height="1" alt="" src="Images/njs.gif" width="1" /></noscript></div>
+    </div>
+</body>
+</html>

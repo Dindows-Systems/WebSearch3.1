@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <Setting>
+    <FullName>N Clicks Satisfied</FullName>
+    <ShortName>nCS</ShortName>
+    <Cite>Automatic Query Type Identification Based on Click Through Information</Cite>
+    <Valve>0.7</Valve>
+    <nClicks>2</nClicks>
+  </Setting>
+</root>

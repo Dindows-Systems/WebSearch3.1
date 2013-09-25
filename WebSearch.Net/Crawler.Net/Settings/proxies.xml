@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT Proxy ANY>
+  <!ATTLIST Proxy _Name ID #REQUIRED>
+  <!ATTLIST Proxy _Address CDATA #REQUIRED>
+  <!ATTLIST Proxy _UserName CDATA #REQUIRED>
+  <!ATTLIST Proxy _Password CDATA "">
+]>
+<root>
+  <Proxy _Name="SJTU" _Address="http://inproxy.sjtu.edu.cn:8000" _UserName="liangliang_norest" _Password="MSGTSCNewsgroup" />
+</root>

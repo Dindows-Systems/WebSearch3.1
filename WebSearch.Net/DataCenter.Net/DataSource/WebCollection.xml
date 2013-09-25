@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT WebCollection ANY>
+  <!ATTLIST WebCollection _Name ID #REQUIRED>
+  <!ATTLIST WebCollection _Path CDATA #REQUIRED>
+  <!ATTLIST WebCollection _Target CDATA "">
+  <!ATTLIST WebCollection _Store CDATA #REQUIRED>
+  <!ATTLIST WebCollection _Language CDATA #REQUIRED>
+  <!ATTLIST WebCollection _Size CDATA "0">
+  <!ELEMENT DataSource ANY>
+  <!ATTLIST DataSource _SubType CDATA #REQUIRED>
+  <!ATTLIST DataSource _SubName CDATA #REQUIRED>
+]>
+<root>
+  <WebCollection _Name="mse" _Path="http://192.168.3.22:8080/SEC/SearchEngine3?searchString={0}&amp;numResults={1}&amp;engine=baidu&amp;engine=sogou&amp;engine=yahoo&amp;engine=soso" _Target="" _Store="SEngine" _Language="Chinese" />
+  <WebCollection _Name="baidu" _Path="http://www.baidu.com/s?q1={0}&amp;rn={1}&amp;pn={2}" _Target="" _Store="SEngine" _Language="Chinese" />
+  <WebCollection _Name="google" _Path="http://www.google.cn/search?as_q={0}&amp;num={1}" _Target="" _Store="SEngine" _Language="Chinese" />
+  <WebCollection _Name="sogou" _Path="http://www.sogou.com/web?query={0}&amp;num={1}&amp;page={2}" _Target="" _Store="SEngine" _Language="Chinese" />
+  <WebCollection _Name="SogouIndex" _Path="D:\TestIndex" _Target="" _Store="Lucene" _Language="Chinese" _Size="180000" />
+</root>

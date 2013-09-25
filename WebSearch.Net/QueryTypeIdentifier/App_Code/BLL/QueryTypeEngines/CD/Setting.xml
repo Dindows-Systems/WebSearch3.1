@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <Setting>
+    <FullName>Click Distribution</FullName>
+    <ShortName>CD</ShortName>
+    <Cite>Automatic Identification of User Goals in Web Search</Cite>
+    <Valve>0.8</Valve>
+  </Setting>
+</root>

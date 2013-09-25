@@ -1,0 +1,300 @@
+using System;
+using System.Data;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.Text;
+using Model.Net;
+using DataCenter.Net.Data;
+
+namespace DataCenter.Net.MSSQL_DAL
+{
+    /// <summary>
+    /// Summary description for CAnalysisDAO
+    /// </summary>
+    public class MSSQLQueryCollection : MSSQLHelper, IQueryCollection
+    {
+        #region Data Source
+
+        protected QueryCollection _dataSource;
+
+        public QueryCollection DataSource
+        {
+            get { return _dataSource; }
+            set { _dataSource = value; }
+        }
+    
+        #endregion
+
+        #region MSSQLQueryCollection Constructors
+
+        public MSSQLQueryCollection(QueryCollection ds) : base(ds)
+        {
+            this._dataSource = ds;
+        }
+
+        #endregion
+
+        #region IQueryCollection Members
+
+        #region For Train Set
+
+        public DataTable GetTrainSets(QueryLog queryLog)
+        {
+            DataSet sets = new DataSet("TrainingSets");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+
+            if (queryLog != null)
+            {
+                // prepare the sql command text
+                adapter.SelectCommand = new SqlCommand("SELECT ID, tableName FROM " +
+                    "TableCatalog WHERE srcLogDB=@srcLogDB AND tableType=@tableType", _conn);
+                adapter.SelectCommand.Parameters.Add("@srcLogDB", SqlDbType.Int).Value = (int)queryLog.ID;
+                adapter.SelectCommand.Parameters.Add("@tableType", SqlDbType.TinyInt).Value =
+                    (int)AnalysisType.Train;
+            }
+            else
+            {
+                adapter.SelectCommand = new SqlCommand("SELECT ID, tableName FROM " +
+                    "TableCatalog WHERE srcLogDB IS NULL AND tableType=@tableType", _conn);
+                adapter.SelectCommand.Parameters.Add("@tableType", SqlDbType.TinyInt).Value =
+                    (int)AnalysisType.Train;
+            }
+
+            adapter.Fill(sets, "TrainingSets");
+            return sets.Tables[0];
+        }
+
+        public bool CreateTrainSet(string trainsetName, int count, QueryLog queryLog)
+        {
+            // first, create the table named 'trainsetName' by calling the store procedure
+            // and add it into TableCatalog
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = this._conn;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "CreateTrainingSet";
+
+            cmd.Parameters.Add("@trainSetName", SqlDbType.NVarChar, 128).Value = trainsetName;
+            cmd.Parameters.Add("@srcDB", SqlDbType.Int).Value = (int)queryLog.ID;
+            cmd.Parameters.Add("@srcTableName", SqlDbType.NVarChar, 128).Value = queryLog.Target;
+            cmd.Parameters.Add("@trainTypeID", SqlDbType.Int).Value = (int)AnalysisType.Train;
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw ex;
+            }
+
+            // second, import 'count' lines of random log from srcDB.srcTable
+            IList<string> items = DataRetriever.GetQueryTextDAO(queryLog).GetRandomQueryTexts(count);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Clear();
+            cmd.CommandText = "INSERT INTO [" + trainsetName + "] (queryText) VALUES (@queryText)";
+            cmd.Parameters.Add("@queryText", SqlDbType.NVarChar, 128);
+            try
+            {
+                foreach (string queryText in items)
+                {
+                    cmd.Parameters["@queryText"].Value = queryText;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw ex;
+            }
+            return true;
+        }
+
+        public DataTable GetTrainSetData(string trainsetName)
+        {
+            DataSet set = new DataSet("TrainingSet");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+
+            // prepare the sql command text
+            adapter.SelectCommand = new SqlCommand(
+                "SELECT * FROM [" + trainsetName + "]", _conn);
+
+            adapter.Fill(set, "TrainingSet");
+            return set.Tables[0];
+        }
+
+        public DataTable GetRandomTrainSetData(string trainsetName, int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region For Test Set
+
+        public DataTable GetTestSets(QueryLog queryLog)
+        {
+            DataSet sets = new DataSet("TestSets");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+
+            if (queryLog != null)
+            {
+                // prepare the sql command text
+                adapter.SelectCommand = new SqlCommand("SELECT ID, tableName FROM " +
+                    "TableCatalog WHERE srcLogDB=@srcLogDB AND tableType=@tableType", _conn);
+                adapter.SelectCommand.Parameters.Add("@srcLogDB", SqlDbType.Int).Value = queryLog.ID;
+                adapter.SelectCommand.Parameters.Add("@tableType", SqlDbType.TinyInt).Value =
+                    (int)AnalysisType.Test;
+            }
+            else
+            {
+                adapter.SelectCommand = new SqlCommand("SELECT ID, tableName FROM " +
+                    "TableCatalog WHERE srcLogDB IS NULL AND tableType=@tableType", _conn);
+                adapter.SelectCommand.Parameters.Add("@tableType", SqlDbType.TinyInt).Value =
+                    (int)AnalysisType.Test;
+            }
+
+            adapter.Fill(sets, "TestSets");
+            return sets.Tables[0];
+        }
+
+        public bool CreateTestSet(string testsetName, int count, QueryLog queryLog)
+        {
+            // first, create the table named 'testsetName' by calling the store procedure
+            // and add it into TableCatalog
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = this._conn;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "CreateTestSet";
+
+            cmd.Parameters.Add("@testSetName", SqlDbType.NVarChar, 128).Value = testsetName;
+            cmd.Parameters.Add("@srcDB", SqlDbType.Int).Value = queryLog.ID;
+            cmd.Parameters.Add("@srcTableName", SqlDbType.NVarChar, 128).Value = queryLog.Target;
+            cmd.Parameters.Add("@testTypeID", SqlDbType.Int).Value = (int)AnalysisType.Test;
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw ex;
+            }
+
+            // second, import 'count' lines of random log from srcDB.srcTable
+            IList<string> items = DataRetriever.GetQueryTextDAO(queryLog).GetRandomQueryTexts(count);
+
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Clear();
+            cmd.CommandText = "INSERT INTO [" + testsetName + "] (queryText) VALUES (@queryText)";
+            cmd.Parameters.Add("@queryText", SqlDbType.NVarChar, 128);
+            try
+            {
+                foreach (string queryText in items)
+                {
+                    cmd.Parameters["@queryText"].Value = queryText;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw ex;
+            }
+            return true;
+        }
+
+        public DataTable GetTestSetData(string testsetName)
+        {
+            DataSet set = new DataSet("TestSet");
+            SqlDataAdapter adapter = new SqlDataAdapter();
+
+            // prepare the sql command text
+            adapter.SelectCommand = new SqlCommand(
+                "SELECT * FROM [" + testsetName +"]", _conn);
+
+            adapter.Fill(set, "TestSet");
+            return set.Tables[0];
+        }
+
+        public DataTable GetRandomTestData(string testsetName, int count)
+        {
+            throw new Exception("The method or operation is not implemented.");
+        }
+
+        #endregion
+
+        #region Common
+
+        public bool AddSurvey(String datasetName, int queryID, QueryType type)
+        {
+            // add the survey record into ...Survey
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = this._conn;
+            try
+            {
+                // insert the survey record
+                cmd.CommandText = "INSERT INTO [" + datasetName + ".Survey] (queryID,queryType) " +
+                    "VALUES (" + queryID + "," + type.ID + ")";
+                if (cmd.ExecuteNonQuery() != 1)
+                    return false;
+
+                // calculate the queryType according to total and info
+                cmd.CommandText = "SELECT COUNT(ID) FROM [" + datasetName + ".Survey] WHERE " +
+                    "queryID=" + queryID;
+                int total = int.Parse(cmd.ExecuteScalar().ToString());
+                if (total == 0) return false;
+
+                cmd.CommandText = "SELECT COUNT(ID) FROM [" + datasetName + ".Survey] WHERE " +
+                    "queryID=" + queryID + " AND queryType=@queryType";
+                cmd.Parameters.Add("@queryType", SqlDbType.SmallInt);
+                
+                // calculate informational, navigational, transactional num
+                cmd.Parameters["@queryType"].Value = QueryTypes.Informational.ID;
+                int info = int.Parse(cmd.ExecuteScalar().ToString());
+                cmd.Parameters["@queryType"].Value = QueryTypes.Navigatinoal.ID;
+                int navi = int.Parse(cmd.ExecuteScalar().ToString());
+                int trac = total - info - navi;
+
+                cmd.CommandText = "UPDATE [" + datasetName + "] SET queryType=@queryType," + 
+                    "dvariance=@dvariance WHERE queryID=" + queryID;
+                cmd.Parameters.Add("@dvariance", SqlDbType.Float);
+
+                if (info >= navi && info >= trac) // informational query
+                {
+                    cmd.Parameters["@queryType"].Value = QueryTypes.Informational.ID;
+                    cmd.Parameters["@dvariance"].Value = 1F / Statistics.Variance(info,
+                        new int[] { navi, trac });
+                    // update the trainset's queryType value
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+                if (navi >= info && navi >= trac) // navigaional query
+                {
+                    cmd.Parameters["@queryType"].Value = QueryTypes.Navigatinoal.ID;
+                    cmd.Parameters["@dvariance"].Value = 1F / Statistics.Variance(navi,
+                        new int[] { info, trac });
+                }
+                else // transactioal query
+                {
+                    cmd.Parameters["@queryType"].Value = QueryTypes.Transactional.ID;
+                    cmd.Parameters["@dvariance"].Value = 1F / Statistics.Variance(trac,
+                        new int[] { info, navi });
+                }
+                // update the trainset's queryType value
+                cmd.ExecuteNonQuery();
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                this._conn.Close();
+                throw ex;
+            }
+        }
+
+        #endregion
+
+        #endregion
+    }
+}

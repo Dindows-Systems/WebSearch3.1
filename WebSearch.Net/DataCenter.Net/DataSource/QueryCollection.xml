@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT QueryCollection ANY>
+  <!ATTLIST QueryCollection _Name ID #REQUIRED>
+  <!ATTLIST QueryCollection _Path CDATA #REQUIRED>
+  <!ATTLIST QueryCollection _Target CDATA "">
+  <!ATTLIST QueryCollection _Store CDATA #REQUIRED>
+  <!ATTLIST QueryCollection _Language CDATA #REQUIRED>
+  <!ATTLIST QueryCollection _Size CDATA "0">
+  <!ELEMENT DataSource ANY>
+  <!ATTLIST DataSource _SubType CDATA #REQUIRED>
+  <!ATTLIST DataSource _SubName CDATA #REQUIRED>
+]>
+<root>
+  <QueryCollection _Name="Collection1" _Path="Data Source=localhost\SQLSERVER2005;Initial Catalog=AnalysisDB;User ID=sa;Password=111111" _Target="SogouQTrainSet1" _Store="MSSQL" _Language="Chinese" />
+</root>

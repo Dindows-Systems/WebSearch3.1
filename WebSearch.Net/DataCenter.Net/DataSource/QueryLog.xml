@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT QueryLog ANY>
+  <!ATTLIST QueryLog _Name ID #REQUIRED>
+  <!ATTLIST QueryLog _Path CDATA #REQUIRED>
+  <!ATTLIST QueryLog _Target CDATA #REQUIRED>
+  <!ATTLIST QueryLog _Store CDATA #REQUIRED>
+  <!ATTLIST QueryLog _Language CDATA #REQUIRED>
+  <!ATTLIST QueryLog _Size CDATA "0">
+  <!ATTLIST QueryLog _StartDate CDATA #REQUIRED>
+  <!ATTLIST QueryLog _EndDate CDATA #REQUIRED>
+  <!ELEMENT DataSource ANY>
+  <!ATTLIST DataSource _SubType CDATA #REQUIRED>
+  <!ATTLIST DataSource _SubName CDATA #REQUIRED>
+]>
+<root>
+  <QueryLog _Name="Sogou" _Path="Data Source=192.168.3.25;Initial Catalog=SogouQ;User ID=sa;Password=111111" _Target="[access_log.200608]" _Store="MSSQL" _Language="Chinese" _Size="1000000" _StartDate="2006-08-01" _EndDate="2006-09-01" />
+</root>

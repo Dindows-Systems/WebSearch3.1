@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root [
+  <!ELEMENT root ANY>
+  <!ELEMENT dictionary ANY>
+  <!ATTLIST dictionary _Name ID #REQUIRED>
+  <!ATTLIST dictionary _Path CDATA #REQUIRED>
+]>
+<root>
+  <dictionary _Name="NICTCLAS" _Path="D:\WebSearch.Net\NICTCLAS\Dictionary\" />
+  <dictionary _Name="SharpNLP" _Path="D:\WebSearch.Net\SharpNLP\Models\" />
+  <dictionary _Name="Wordnet" _Path="C:\Program Files\WordNet\2.1\dict\" />
+</root>

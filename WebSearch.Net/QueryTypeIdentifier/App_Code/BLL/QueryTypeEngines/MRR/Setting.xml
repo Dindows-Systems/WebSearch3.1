@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <Setting>
+    <FullName>Mean Reciprocal Rank</FullName>
+    <ShortName>MRR</ShortName>
+    <Cite>Web Track</Cite>
+    <Valve>0.8</Valve>
+  </Setting>
+</root>
